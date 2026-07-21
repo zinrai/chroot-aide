@@ -18,15 +18,6 @@ A command-line tool to manage filesystem mounts for chroot environments with Ove
 - Root privileges (sudo)
 - `mountpoint` command (usually part of util-linux package)
 
-## Installation
-
-Build from source:
-
-```bash
-$ go build
-$ sudo cp chroot-prep /usr/local/bin/
-```
-
 ## Prerequisites
 
 For the examples in this documentation, we'll use a Debian trixie environment created with debootstrap:

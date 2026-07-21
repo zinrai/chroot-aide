@@ -7,6 +7,13 @@ import (
 	"os"
 )
 
+// Injected at build time by goreleaser via -ldflags -X
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
 	if len(os.Args) < 2 {
 		printUsage()
@@ -98,6 +105,11 @@ func main() {
 			log.Fatalf("Failed to remove: %v", err)
 		}
 
+	case "version":
+		fmt.Printf("chroot-prep version %s\n", version)
+		fmt.Printf("commit: %s\n", commit)
+		fmt.Printf("built: %s\n", date)
+
 	default:
 		printUsage()
 		os.Exit(1)
@@ -111,11 +123,13 @@ Usage:
   chroot-prep setup -dir /path/to/chroot [-overlay [name]]
   chroot-prep cleanup -dir /path/to/chroot [-overlay [name]]
   chroot-prep remove -dir /path/to/chroot [-force] [-overlay [name]]
+  chroot-prep version
 
 Commands:
   setup    Setup chroot environment with essential filesystems
   cleanup  Cleanup mounted filesystems from chroot environment
   remove   Remove chroot environment (with automatic unmounting)
+  version  Print version information
 
 Setup Options:
   -dir string    Path to chroot directory (required)
@@ -155,6 +169,11 @@ Note: This program requires root privileges (sudo)`
 }
 
 func init() {
+	// version does not touch the filesystem, so it does not require root
+	if len(os.Args) >= 2 && os.Args[1] == "version" {
+		return
+	}
+
 	// Ensure we're running as root
 	if os.Geteuid() != 0 {
 		log.Fatal("This program must be run as root (sudo)")

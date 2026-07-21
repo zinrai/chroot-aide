@@ -54,9 +54,3 @@ func cleanupResolvConf(chrootDir string) error {
 
 	return nil
 }
-
-// validateResolvConf checks if resolv.conf is properly set up
-func validateResolvConf(chrootDir string) bool {
-	chrootResolvConf := filepath.Join(chrootDir, resolvConfName)
-	return fileExists(chrootResolvConf)
-}
